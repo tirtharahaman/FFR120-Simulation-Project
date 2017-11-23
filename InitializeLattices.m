@@ -1,9 +1,10 @@
-function [agentLattice,foodLattice,agentProperties] = InitializeLattices(sideLength,initialPopulationSize,initialFoodSupply)
+function [agentLattice,foodLattice,agentProperties,foodProperties] = InitializeLattices(sideLength,initialPopulationSize,initialFoodSupply)
 
 agentLattice = zeros(sideLength);
 foodLattice = zeros(sideLength);
 agentProperties = zeros(sideLength^2,5); %Currently built for 5 properties,
 %Dead/Alive, x, y, age and hunger. Can be changed of course.
+foodProperties = zeros(sideLength^2,3); %to keep track of x- and y-coordinates when food grows
 
 for i = 1:initialFoodSupply
     
@@ -16,8 +17,11 @@ for i = 1:initialFoodSupply
     
     if foodLattice(x,y) == 0
         
-      foodLattice(x,y) = 1;
+      foodLattice(x,y) = i;
       foodPlanted = true;
+      foodProperties(i,1) = true; %true means alive
+      foodProperties(i,2) = x;
+      foodProperties(i,3) = y;
       
     end
     
