@@ -1,14 +1,16 @@
 clc; clf; clear;
 
 % --- Configurable parameters ---
-sideLength = 100; %size of lattice
-initialPopulationSize = 50;
-initialFoodSupply = 500;
-diffusion = 0.5; %Probability of an agent moving in a given timestep.
+sideLength = 3; %size of lattice
+initialPopulationSize = 1;
+initialFoodSupply = 1;
+diffusion = 1; %Probability of an agent moving in a given timestep.
 nTimesteps = 1e3;
 timestepsBetweenAnimations = 1; % update graphics after a certain number of updates
 animateGrid = true;
 animateGraph = true;
+pauseBetweenAnimations = 1;
+moveToFood = true; % move the agent to the first available food tile in its neighbourhood
 
 % --- Initialize global variables ---
 [agentLattice, foodLattice, agentProperties, foodProperties] = ...
@@ -34,7 +36,7 @@ for iTimestep = 1:nTimesteps
     
     % --- Move agents ---
     [agentLattice, agentProperties] = ...
-        MoveAgents(agentLattice, foodLattice, agentProperties, diffusion);
+        MoveAgents(agentLattice, foodLattice, agentProperties, diffusion, moveToFood);
     
     % --- Update graphics ---
     nAgents(iTimestep+1) = sum(agentProperties(:,1));
@@ -48,6 +50,7 @@ for iTimestep = 1:nTimesteps
             axis([0 iTimestep 0 1]); % the x-axis changes with time
         end
         drawnow;
+        pause(pauseBetweenAnimations)
     end
 end
 

@@ -1,5 +1,5 @@
 function [agentLattice, agentProperties] = ...
-  MoveAgents(agentLattice, foodLattice, agentProperties, diffusion)
+  MoveAgents(agentLattice, foodLattice, agentProperties, diffusion, moveToFood)
 
   nAgents = sum(agentProperties(:,1));
 
@@ -19,22 +19,25 @@ function [agentLattice, agentProperties] = ...
       randomDirections = randperm(8);
       foodFound = false;
 
-      % Agent will move to first available food position, if food exists in neighbourhood
-      for d = 1:length(randomDirections)
-        direction = randomDirections(d);
-        [nextX, nextY] = GetPeriodicBoundaryCoordinates([x,y]', size(agentLattice), direction);
-        if foodLattice(nextX, nextY) == 1
-          agentLattice(nextX, nextY) = i;
-          agentLattice(x,y) = 0;
-          agentProperties(i,2) = nextX;
-          agentProperties(i,3) = nextY;
-          foodLattice(nextX, nextY) = 0;
-          foodFound = true;
-          break;
-        end
+      % Agent will move to the first available food position if moveToFood is set to true,
+      % and if food exists in neighbourhood
+      if moveToFood
+          for d = 1:length(randomDirections)
+            direction = randomDirections(d);
+            [nextX, nextY] = GetPeriodicBoundaryCoordinates([x,y]', size(agentLattice), direction);
+            if foodLattice(nextX, nextY) == 1 && agentLattice(nextX, nextY) == 0
+              agentLattice(nextX, nextY) = i;
+              agentLattice(x,y) = 0;
+              agentProperties(i,2) = nextX;
+              agentProperties(i,3) = nextY;
+              foodFound = true;
+              break;
+            end
+          end
       end
 
-      % If food does not exist in the neighbourhood, move to an empty place
+      % If food does not exist in the neighbourhood or moveToFood is set to false,
+      % move to an empty place
       if ~foodFound
         for d = 1:length(randomDirections)
           direction = randomDirections(d);
