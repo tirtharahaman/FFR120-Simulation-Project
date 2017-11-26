@@ -5,12 +5,12 @@ function UpdateGraph(agentPlot, foodPlot, agentLattice, nAgents, nFoodTiles)
 
     latticeLength = size(agentLattice,1);
     maxPopulation = latticeLength^2;
-    nMaxIterations = length(nAgents)-1;
+    nMaxTimesteps = length(nAgents)-1;
     
     agentPlot.YData = nAgents/maxPopulation;
-    agentPlot.XData = 0:nMaxIterations;
+    agentPlot.XData = 0:nMaxTimesteps;
     
     foodPlot.YData = nFoodTiles/maxPopulation;
-    foodPlot.XData = 0:nMaxIterations;
+    foodPlot.XData = 0:nMaxTimesteps;
         
 end

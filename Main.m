@@ -1,20 +1,20 @@
 clc; clf; clear;
 
-% --- Configurate parameters ---
+% --- Configurable parameters ---
 sideLength = 100; %size of lattice
 initialPopulationSize = 50;
-initialFoodSupply = 50; 
+initialFoodSupply = 500;
 diffusion = 0.5; %Probability of an agent moving in a given timestep.
-nMaxIterations = 1e3;
-iterationsBetweenAnimations = 1; % update graphics after a certain number of updates
+nTimesteps = 1e3;
+timestepsBetweenAnimations = 1; % update graphics after a certain number of updates
 animateGrid = true;
 animateGraph = true;
 
 % --- Initialize global variables ---
-[agentLattice,foodLattice,agentProperties,foodProperties] = ...
+[agentLattice, foodLattice, agentProperties, foodProperties] = ...
     InitializeLattices(sideLength,initialPopulationSize,initialFoodSupply);
-nAgents = zeros(1,nMaxIterations+1); % number of agents alive after each update
-nFoodTiles = zeros(1,nMaxIterations+1); % number of food tiles left after each update
+nAgents = zeros(1,nTimesteps+1); % number of agents alive after each update
+nFoodTiles = zeros(1,nTimesteps+1); % number of food tiles left after each update
 nAgents(1) = sum(agentProperties(:,1)); % initial agents
 nFoodTiles(1) = sum(foodProperties(:,1)); % initial food tile
 % initialize grid and graph
@@ -30,29 +30,29 @@ subplot(1,2,2);
 % dead/alive, x, y in this order. This can of course be
 % changed.
 
-for iIteration = 1:nMaxIterations
+for iTimestep = 1:nTimesteps
     
     % --- Move agents ---
-    [agentLattice,agentProperties] = ...
-        MoveAgents(agentLattice,foodLattice,agentProperties,diffusion);
+    [agentLattice, agentProperties] = ...
+        MoveAgents(agentLattice, foodLattice, agentProperties, diffusion);
     
     % --- Update graphics ---
-    nAgents(iIteration+1) = sum(agentProperties(:,1));
-    nFoodTiles(iIteration+1) = sum(foodProperties(:,1));
-    if rem(iIteration,iterationsBetweenAnimations) == 0
+    nAgents(iTimestep+1) = sum(agentProperties(:,1));
+    nFoodTiles(iTimestep+1) = sum(foodProperties(:,1));
+    if rem(iTimestep, timestepsBetweenAnimations) == 0
         if animateGrid
             UpdateGrid(agentGrid, foodGrid, agentProperties, foodProperties);
         end
         if animateGraph
             UpdateGraph(agentPlot, foodPlot, agentLattice, nAgents, nFoodTiles);
-            axis([0 iIteration 0 1.3]); % the x-axis changes with time
+            axis([0 iTimestep 0 1]); % the x-axis changes with time
         end
-        drawnow
+        drawnow;
     end
 end
 
 % --- Plot final graphics ---
 UpdateGrid(agentGrid, foodGrid, agentProperties, foodProperties);
 UpdateGraph(agentPlot, foodPlot, agentLattice, nAgents, nFoodTiles);
-axis([0 iIteration 0 1.3]);
-drawnow
+axis([0 iTimestep 0 1.3]);
+drawnow;
