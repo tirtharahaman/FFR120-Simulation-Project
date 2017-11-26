@@ -1,16 +1,29 @@
 clc; clf; clear;
+% -------------------------------------
+% ------ Configurable parameters ------
+% -------------------------------------
 
-% --- Configurable parameters ---
-sideLength = 3; %size of lattice
-initialPopulationSize = 1;
-initialFoodSupply = 1;
-diffusion = 1; %Probability of an agent moving in a given timestep.
+% --- Grid and starting parameters ---
+sideLength = 100; %size of lattice
+initialPopulationSize = 50;
+initialFoodSupply = 50;
+
+% --- Death parameters ---
+maxHunger = Inf; % after this many steps without eating, the agent will die
+deathParameter = 0.01; % [0,1] basic probability of dying after each timestep
+youthParamater = 0.9999; % [0,1] lower numbers means that the agent dies more quickly
+% the probability to die is 1 - (1 - deathParameter)*youthParamater^age
+
+% --- Movement parameters ---
+diffusion = 0.5; %Probability of an agent moving in a given timestep.
+moveToFood = false; % move the agent to the first available food tile in its neighbourhood
+
+% --- Runtime and animation parameters ---
 nTimesteps = 1e3;
 timestepsBetweenAnimations = 1; % update graphics after a certain number of updates
-animateGrid = true;
-animateGraph = true;
-pauseBetweenAnimations = 1;
-moveToFood = true; % move the agent to the first available food tile in its neighbourhood
+animateGrid = 1;
+animateGraph = 1;
+pauseBetweenAnimations = 0; % time in seconds
 
 % --- Initialize global variables ---
 [agentLattice, foodLattice, agentProperties, foodProperties] = ...
@@ -38,6 +51,19 @@ for iTimestep = 1:nTimesteps
     [agentLattice, agentProperties] = ...
         MoveAgents(agentLattice, foodLattice, agentProperties, diffusion, moveToFood);
     
+    % --- Update hunger and age ---
+    agentProperties(:,4:5) = agentProperties(:,4:5) + 1; % might need changing
+    
+    % --- Make agents eat (and reset hunger value) ---
+    
+    
+	% --- Check if agents should die ---
+    [agentLattice, agentProperties] = ...
+    CheckForDeaths(deathParameter, youthParamater, maxHunger, agentLattice, agentProperties);
+
+    % --- Check if agents should give birth ---
+
+    
     % --- Update graphics ---
     nAgents(iTimestep+1) = sum(agentProperties(:,1));
     nFoodTiles(iTimestep+1) = sum(foodProperties(:,1));
@@ -51,6 +77,9 @@ for iTimestep = 1:nTimesteps
         end
         drawnow;
         pause(pauseBetweenAnimations)
+    end
+    if nAgents(iTimestep+1) == 0
+        break
     end
 end
 
