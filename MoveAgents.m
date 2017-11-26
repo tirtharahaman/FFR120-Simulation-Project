@@ -7,14 +7,19 @@ function [agentLattice, agentProperties] = ...
     return;
   end
 
-  for i = 1:nAgents
-
+  agentNumber = 0;
+  checkedAgents = 0; % we need to check first if the agent is alive or dead
+  while checkedAgents < nAgents
+    agentNumber = agentNumber + 1;
+    isAlive = agentProperties(agentNumber,1);
+    if isAlive
+        
     r = rand;
 
     if r < diffusion
 
-      x = agentProperties(i,2);
-      y = agentProperties(i,3);
+      x = agentProperties(agentNumber,2);
+      y = agentProperties(agentNumber,3);
 
       randomDirections = randperm(8);
       foodFound = false;
@@ -26,10 +31,10 @@ function [agentLattice, agentProperties] = ...
             direction = randomDirections(d);
             [nextX, nextY] = GetPeriodicBoundaryCoordinates([x,y]', size(agentLattice), direction);
             if foodLattice(nextX, nextY) == 1 && agentLattice(nextX, nextY) == 0
-              agentLattice(nextX, nextY) = i;
+              agentLattice(nextX, nextY) = agentNumber;
               agentLattice(x,y) = 0;
-              agentProperties(i,2) = nextX;
-              agentProperties(i,3) = nextY;
+              agentProperties(agentNumber,2) = nextX;
+              agentProperties(agentNumber,3) = nextY;
               foodFound = true;
               break;
             end
@@ -43,16 +48,20 @@ function [agentLattice, agentProperties] = ...
           direction = randomDirections(d);
           [nextX, nextY] = GetPeriodicBoundaryCoordinates([x,y]', size(agentLattice), direction);
           if agentLattice(nextX, nextY) == 0
-            agentLattice(nextX, nextY) = i;
+            agentLattice(nextX, nextY) = agentNumber;
             agentLattice(x,y) = 0;
-            agentProperties(i,2) = nextX;
-            agentProperties(i,3) = nextY;
+            agentProperties(agentNumber,2) = nextX;
+            agentProperties(agentNumber,3) = nextY;
             break;
           end
         end
       end
       % At this point either agent has moved to a food spot, or to an empty
       % spot. If there is no empty spot, the agent will not move.
+    end
+    	checkedAgents = checkedAgents + 1;
+    else
+        continue 
     end
   end
 

@@ -37,7 +37,7 @@ function [agentLattice, foodLattice, agentProperties, foodProperties] = ...
       x = 1 + fix(sideLength*rand); 
       y = 1 + fix(sideLength*rand);
 
-      if foodLattice(x,y) == 0 && agentLattice(x,y) == 0
+      if agentLattice(x,y) == 0
 
         agentLattice(x,y) = i;
         agentPlaced = true;
