@@ -8,15 +8,18 @@ sideLength = 100; %size of lattice
 initialPopulationSize = 50;
 initialFoodSupply = 50;
 
+% --- Birth parameters ---
+birthRate = 0.2;
+
 % --- Death parameters ---
 maxHunger = Inf; % after this many steps without eating, the agent will die
-deathParameter = 0.01; % [0,1] basic probability of dying after each timestep
+deathParameter = 0.1; % [0,1] basic probability of dying after each timestep
 youthParamater = 0.9999; % [0,1] lower numbers means that the agent dies more quickly
 % the probability to die is 1 - (1 - deathParameter)*youthParamater^age
 
 % --- Movement parameters ---
 diffusion = 0.5; %Probability of an agent moving in a given timestep.
-moveToFood = false; % move the agent to the first available food tile in its neighbourhood
+moveToFood = true; % move the agent to the first available food tile in its neighbourhood
 
 % --- Runtime and animation parameters ---
 nTimesteps = 1e3;
@@ -57,12 +60,12 @@ for iTimestep = 1:nTimesteps
     % --- Make agents eat (and reset hunger value) ---
     
     
-	% --- Check if agents should die ---
+    % --- Check if agents should die ---
     [agentLattice, agentProperties] = ...
-    CheckForDeaths(deathParameter, youthParamater, maxHunger, agentLattice, agentProperties);
+        CheckForDeaths(deathParameter, youthParamater, maxHunger, agentLattice, agentProperties);
 
     % --- Check if agents should give birth ---
-
+    [agentLattice, agentProperties] = CheckForBirths(birthRate, agentLattice, agentProperties);
     
     % --- Update graphics ---
     nAgents(iTimestep+1) = sum(agentProperties(:,1));

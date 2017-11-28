@@ -11,9 +11,9 @@ function [agentPlot, foodPlot] = InitializeGraph(agentLattice, nAgents, nFoodTil
     hold on;
     foodPlot = plot(horizontalAxis, ones(2,1)*nFoodTiles(1)/maxPopulation, 'Color', [0.05 0.9 0.05]);
  
-    xlabel('Iterations (time)');
+    xlabel('Timesteps');
     ylabel('Population density');
-    legend('Agents', 'Food tiles');
+    legend('Agents', 'Food tiles', 'Location', 'southeast');
     title('Population graph');
     axis([0 1 0 1]);
 end

@@ -12,21 +12,21 @@ function [agentLattice, agentProperties] = ...
   while checkedAgents < nAgents
     agentNumber = agentNumber + 1;
     isAlive = agentProperties(agentNumber,1);
-    if isAlive
-        
-    r = rand;
 
-    if r < diffusion
+    if isAlive   
+      r = rand;
 
-      x = agentProperties(agentNumber,2);
-      y = agentProperties(agentNumber,3);
+      if r < diffusion
 
-      randomDirections = randperm(8);
-      foodFound = false;
+        x = agentProperties(agentNumber,2);
+        y = agentProperties(agentNumber,3);
 
-      % Agent will move to the first available food position if moveToFood is set to true,
-      % and if food exists in neighbourhood
-      if moveToFood
+        randomDirections = randperm(8);
+        foodFound = false;
+
+        % Agent will move to the first available food position if moveToFood is set to true,
+        % and if food exists in neighbourhood
+        if moveToFood
           for d = 1:length(randomDirections)
             direction = randomDirections(d);
             [nextX, nextY] = GetPeriodicBoundaryCoordinates([x,y]', size(agentLattice), direction);
@@ -39,29 +39,29 @@ function [agentLattice, agentProperties] = ...
               break;
             end
           end
-      end
+        end
 
-      % If food does not exist in the neighbourhood or moveToFood is set to false,
-      % move to an empty place
-      if ~foodFound
-        for d = 1:length(randomDirections)
-          direction = randomDirections(d);
-          [nextX, nextY] = GetPeriodicBoundaryCoordinates([x,y]', size(agentLattice), direction);
-          if agentLattice(nextX, nextY) == 0
-            agentLattice(nextX, nextY) = agentNumber;
-            agentLattice(x,y) = 0;
-            agentProperties(agentNumber,2) = nextX;
-            agentProperties(agentNumber,3) = nextY;
-            break;
+        % If food does not exist in the neighbourhood or moveToFood is set to false,
+        % move to an empty place
+        if ~foodFound
+          for d = 1:length(randomDirections)
+            direction = randomDirections(d);
+            [nextX, nextY] = GetPeriodicBoundaryCoordinates([x,y]', size(agentLattice), direction);
+            if agentLattice(nextX, nextY) == 0
+              agentLattice(nextX, nextY) = agentNumber;
+              agentLattice(x,y) = 0;
+              agentProperties(agentNumber,2) = nextX;
+              agentProperties(agentNumber,3) = nextY;
+              break;
+            end
           end
         end
+        % At this point either agent has moved to a food spot, or to an empty
+        % spot. If there is no empty spot, the agent will not move.
       end
-      % At this point either agent has moved to a food spot, or to an empty
-      % spot. If there is no empty spot, the agent will not move.
-    end
-    	checkedAgents = checkedAgents + 1;
-    else
-        continue 
+        checkedAgents = checkedAgents + 1;
+      else
+        continue;
     end
   end
 
