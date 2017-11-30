@@ -26,14 +26,17 @@ function [agentLattice, agentProperties] = CheckForBirths(birthRate, agentLattic
           x = agentProperties(agentNumber,2);
           y = agentProperties(agentNumber,3);
           [nextX, nextY] = GetPeriodicBoundaryCoordinates([x,y]', size(agentLattice), direction);
+          
           if agentLattice(nextX, nextY) == 0
             agentRow = find(agentProperties(:,1) == 0);
+            
             if ~isempty(agentRow)
               % New agent initialized
-              agentProperties(agentRow(1), :) = [1 nextX nextY 0 0];
+              agentProperties(agentRow(1), :) = [1 nextX nextY 0 1];
               agentLattice(nextX, nextY) = agentRow(1);
               break;
             end
+            
           end
 
         end
