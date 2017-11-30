@@ -4,9 +4,12 @@ clc; clf; clear;
 % -------------------------------------
 
 % --- Grid and starting parameters ---
-sideLength = 100; %size of lattice
-initialPopulationSize = 500;
-initialFoodSupply = 500;
+sideLength = 3; %size of lattice
+initialPopulationSize = 5;
+initialFoodSupply = 5;
+
+% --- Food parameters ---
+growProbability = 0.1; % probability that each non-food tile grows food each timestep
 
 % --- Birth parameters ---
 birthRate = 0.01;
@@ -60,6 +63,9 @@ for iTimestep = 1:nTimesteps
     % --- Make agents eat (and reset hunger value) ---
     [foodLattice, agentProperties, foodProperties] = ...
     ConsumeFoodTiles(agentLattice, foodLattice, agentProperties, foodProperties);
+    
+    % --- Grow food ---
+    [foodLattice, foodProperties] = GrowFood(foodLattice, foodProperties, growProbability);
     
     % --- Check if agents should die ---
     [agentLattice, agentProperties] = ...
