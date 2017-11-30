@@ -4,21 +4,21 @@ clc; clf; clear;
 % -------------------------------------
 
 % --- Grid and starting parameters ---
-sideLength = 100; %size of lattice
+sideLength = 100; % size of lattice
 initialPopulationSize = 50;
-initialFoodSupply = 50;
+initialFoodSupply = 5000;
 
-% --- Birth parameters ---
-birthRate = 0.2;
+% --- Fitness parameters ---
+foodConstant = 0.5; % positive factor when agent eats food
+hungerConstant = 0.1; % negative factor when agent stays hungry
+ageConstant = 0.007; % negative factor of aging = 1/maxAge
 
-% --- Death parameters ---
-maxHunger = Inf; % after this many steps without eating, the agent will die
-deathParameter = 0.1; % [0,1] basic probability of dying after each timestep
-youthParamater = 0.9999; % [0,1] lower numbers means that the agent dies more quickly
-% the probability to die is 1 - (1 - deathParameter)*youthParamater^age
+% --- Birth & death parameters ---
+birthRate = 1;
+deathRate = 0.1;
 
 % --- Movement parameters ---
-diffusion = 0.5; %Probability of an agent moving in a given timestep.
+diffusion = 0.5; % Probability of an agent moving in a given timestep.
 moveToFood = true; % move the agent to the first available food tile in its neighbourhood
 
 % --- Runtime and animation parameters ---
@@ -49,20 +49,18 @@ subplot(1,2,2);
 % changed.
 
 for iTimestep = 1:nTimesteps
-    
+
     % --- Move agents ---
     [agentLattice, agentProperties] = ...
-        MoveAgents(agentLattice, foodLattice, agentProperties, diffusion, moveToFood);
-    
-    % --- Update hunger and age ---
-    agentProperties(:,4:5) = agentProperties(:,4:5) + 1; % might need changing
-    
-    % --- Make agents eat (and reset hunger value) ---
-    
-    
+      MoveAgents(agentLattice, foodLattice, agentProperties, diffusion, moveToFood);
+
+    % --- Update agent and food properties ---
+    [agentProperties, foodLattice, foodProperties] = ...
+      UpdateAgentAndFoodProperties(agentProperties, foodLattice, foodProperties, ...
+                                    foodConstant, hungerConstant, ageConstant);
+
     % --- Check if agents should die ---
-    [agentLattice, agentProperties] = ...
-        CheckForDeaths(deathParameter, youthParamater, maxHunger, agentLattice, agentProperties);
+    [agentLattice, agentProperties] = CheckForDeaths(deathRate, agentLattice, agentProperties);
 
     % --- Check if agents should give birth ---
     [agentLattice, agentProperties] = CheckForBirths(birthRate, agentLattice, agentProperties);

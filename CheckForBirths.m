@@ -13,8 +13,11 @@ function [agentLattice, agentProperties] = CheckForBirths(birthRate, agentLattic
     isAlive = agentProperties(agentNumber,1);
     if isAlive
 
+      fitness = agentProperties(agentNumber,5);
+      birthProbability = birthRate * fitness;
+
       p = rand;
-      if p < birthRate
+      if p < birthProbability
 
         randomDirections = randperm(8);
         for d = 1:length(randomDirections)
@@ -39,7 +42,7 @@ function [agentLattice, agentProperties] = CheckForBirths(birthRate, agentLattic
       end
       checkedAgents = checkedAgents + 1;
     else
-      continue
+      continue;
     end
   end
 

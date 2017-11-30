@@ -4,7 +4,7 @@ function [agentLattice, foodLattice, agentProperties, foodProperties] = ...
   agentLattice = zeros(sideLength);
   foodLattice = zeros(sideLength);
   agentProperties = zeros(sideLength^2,5); %Currently built for 5 properties,
-  %Dead/Alive, x, y, age and hunger. Can be changed of course.
+  %Dead/Alive, x, y, age and fitness. Can be changed of course.
   foodProperties = zeros(sideLength^2,3); %to keep track of x- and y-coordinates when food grows
 
   for i = 1:initialFoodSupply
@@ -44,6 +44,8 @@ function [agentLattice, foodLattice, agentProperties, foodProperties] = ...
         agentProperties(i,1) = true; %true means alive
         agentProperties(i,2) = x;
         agentProperties(i,3) = y;
+        agentProperties(i,4) = 0; % age
+        agentProperties(i,5) = 1; % fitness
 
       end
     end

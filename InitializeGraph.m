@@ -13,7 +13,7 @@ function [agentPlot, foodPlot] = InitializeGraph(agentLattice, nAgents, nFoodTil
  
     xlabel('Timesteps');
     ylabel('Population density');
-    legend('Agents', 'Food tiles', 'Location', 'southeast');
+    legend('Agents', 'Food tiles', 'Location', 'northwest');
     title('Population graph');
     axis([0 1 0 1]);
 end
