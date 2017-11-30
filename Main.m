@@ -5,16 +5,16 @@ clc; clf; clear;
 
 % --- Grid and starting parameters ---
 sideLength = 100; %size of lattice
-initialPopulationSize = 50;
-initialFoodSupply = 50;
+initialPopulationSize = 500;
+initialFoodSupply = 500;
 
 % --- Birth parameters ---
-birthRate = 0.2;
+birthRate = 0.01;
 
 % --- Death parameters ---
-maxHunger = Inf; % after this many steps without eating, the agent will die
-deathParameter = 0.1; % [0,1] basic probability of dying after each timestep
-youthParamater = 0.9999; % [0,1] lower numbers means that the agent dies more quickly
+maxHunger = 50; % after this many steps without eating, the agent will die
+deathParameter = 0.01; % [0,1] basic probability of dying after each timestep
+youthParamater = 1; % [0,1] lower numbers means that the agent dies more quickly
 % the probability to die is 1 - (1 - deathParameter)*youthParamater^age
 
 % --- Movement parameters ---
@@ -58,7 +58,8 @@ for iTimestep = 1:nTimesteps
     agentProperties(:,4:5) = agentProperties(:,4:5) + 1; % might need changing
     
     % --- Make agents eat (and reset hunger value) ---
-    
+    [foodLattice, agentProperties, foodProperties] = ...
+    ConsumeFoodTiles(agentLattice, foodLattice, agentProperties, foodProperties);
     
     % --- Check if agents should die ---
     [agentLattice, agentProperties] = ...
