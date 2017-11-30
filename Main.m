@@ -5,8 +5,11 @@ clc; clf; clear;
 
 % --- Grid and starting parameters ---
 sideLength = 100; % size of lattice
-initialPopulationSize = 50;
+initialPopulationSize = 100;
 initialFoodSupply = 5000;
+
+% --- Food parameters ---
+growProbability = 0.01; % probability that each non-food tile grows food each timestep
 
 % --- Fitness parameters ---
 foodConstant = 0.5; % positive factor when agent eats food
@@ -14,8 +17,8 @@ hungerConstant = 0.1; % negative factor when agent stays hungry
 ageConstant = 0.007; % negative factor of aging = 1/maxAge
 
 % --- Birth & death parameters ---
-birthRate = 1;
-deathRate = 0.1;
+birthRate = 0.7;
+deathRate = 0.2;
 
 % --- Movement parameters ---
 diffusion = 0.5; % Probability of an agent moving in a given timestep.
@@ -59,12 +62,15 @@ for iTimestep = 1:nTimesteps
       UpdateAgentAndFoodProperties(agentProperties, foodLattice, foodProperties, ...
                                     foodConstant, hungerConstant, ageConstant);
 
+    % --- Grow food ---
+    [foodLattice, foodProperties] = GrowFood(foodLattice, foodProperties, growProbability);
+
     % --- Check if agents should die ---
     [agentLattice, agentProperties] = CheckForDeaths(deathRate, agentLattice, agentProperties);
 
     % --- Check if agents should give birth ---
     [agentLattice, agentProperties] = CheckForBirths(birthRate, agentLattice, agentProperties);
-    
+
     % --- Update graphics ---
     nAgents(iTimestep+1) = sum(agentProperties(:,1));
     nFoodTiles(iTimestep+1) = sum(foodProperties(:,1));
