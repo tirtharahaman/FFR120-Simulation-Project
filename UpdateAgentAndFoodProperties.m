@@ -41,8 +41,9 @@ function [agentProperties, foodLattice, foodProperties] = ...
         fitness + (foodConstant * ateFood) - (ageConstant * age)...
                               - (1-ateFood) * hungerConstant;
       
-      % Capping fitness to 1
+      % Capping fitness between 0 and 1
       fitness = min(fitness, 1);
+      fitness = max(fitness, 0);
       agentProperties(agentNumber, 5) = fitness;
       
       checkedAgents = checkedAgents + 1;
